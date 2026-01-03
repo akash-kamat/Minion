@@ -1,0 +1,24 @@
+{
+  "name": "minion",
+  "version": "1.0.0",
+  "description": "Minion - Minecraft automation companion for cracked servers",
+  "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js"
+  },
+  "keywords": [
+    "minecraft",
+    "minion",
+    "mineflayer",
+    "aternos"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "canvas": "^3.2.0",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "mineflayer": "^4.20.1",
+    "mineflayer-pathfinder": "^2.4.5",
+    "prismarine-viewer": "^1.33.0"
+  }
+}

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minion - Minecraft Companion</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 40px;
+            width: 400px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            margin: 20px 0;
+        }
+
+        .status-badge.online {
+            background: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
+        }
+
+        .status-badge.offline {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+        }
+
+        .status-badge.connecting {
+            background: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .online .dot {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+        }
+
+        .btn-start:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(34, 197, 94, 0.4);
+        }
+
+        .btn-stop {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+
+        .btn-stop:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(239, 68, 68, 0.4);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 12px;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #60a5fa;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            margin-top: 5px;
+        }
+
+        .message {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .message.success {
+            background: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
+        }
+
+        .message.error {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>👾 Minion</h1>
+        <p style="color: #94a3b8;">Minecraft Companion</p>
+
+        <div class="status-badge offline" id="statusBadge">
+            <div class="dot"></div>
+            <span id="statusText">Offline</span>
+        </div>
+
+        <div class="buttons">
+            <button class="btn btn-start" id="btnStart" onclick="startBot()">▶️ Start</button>
+            <button class="btn btn-stop" id="btnStop" onclick="stopBot()" disabled>⏹️ Stop</button>
+        </div>
+
+        <div class="stats" id="stats" style="display: none;">
+            <div class="stat">
+                <div class="stat-value" id="health">--</div>
+                <div class="stat-label">❤️ Health</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="food">--</div>
+                <div class="stat-label">🍖 Food</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="deaths">--</div>
+                <div class="stat-label">💀 Deaths</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="uptime">--</div>
+                <div class="stat-label">⏱️ Uptime</div>
+            </div>
+        </div>
+
+        <div class="message" id="message" style="display: none;"></div>
+    </div>
+
+    <script>
+        let statusInterval;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            checkStatus();
+            statusInterval = setInterval(checkStatus, 2000);
+        });
+
+        async function checkStatus() {
+            try {
+                const res = await fetch('/status');
+                const data = await res.json();
+                updateUI(data);
+            } catch (err) {
+                console.error('Status check failed:', err);
+            }
+        }
+
+        function updateUI(data) {
+            const badge = document.getElementById('statusBadge');
+            const text = document.getElementById('statusText');
+            const btnStart = document.getElementById('btnStart');
+            const btnStop = document.getElementById('btnStop');
+            const stats = document.getElementById('stats');
+
+            badge.className = 'status-badge';
+
+            if (data.online) {
+                badge.classList.add('online');
+                text.textContent = 'Online';
+                btnStart.disabled = true;
+                btnStop.disabled = false;
+                stats.style.display = 'grid';
+
+                if (data.stats) {
+                    document.getElementById('health').textContent = data.stats.health;
+                    document.getElementById('food').textContent = data.stats.food;
+                    document.getElementById('deaths').textContent = data.stats.deaths;
+                    document.getElementById('uptime').textContent = formatUptime(data.stats.uptime);
+                }
+            } else if (data.connecting) {
+                badge.classList.add('connecting');
+                text.textContent = 'Connecting...';
+                btnStart.disabled = true;
+                btnStop.disabled = true;
+                stats.style.display = 'none';
+            } else {
+                badge.classList.add('offline');
+                text.textContent = 'Offline';
+                btnStart.disabled = false;
+                btnStop.disabled = true;
+                stats.style.display = 'none';
+            }
+        }
+
+        function formatUptime(seconds) {
+            if (seconds < 60) return `${seconds}s`;
+            if (seconds < 3600) return `${Math.floor(seconds / 60)}m`;
+            return `${Math.floor(seconds / 3600)}h ${Math.floor((seconds % 3600) / 60)}m`;
+        }
+
+        async function startBot() {
+            showMessage('Starting bot...', 'success');
+            try {
+                const res = await fetch('/start', { method: 'POST' });
+                const data = await res.json();
+                showMessage(data.message, data.success ? 'success' : 'error');
+                setTimeout(checkStatus, 1000);
+            } catch (err) {
+                showMessage('Failed to start bot', 'error');
+            }
+        }
+
+        async function stopBot() {
+            showMessage('Stopping bot...', 'success');
+            try {
+                const res = await fetch('/stop', { method: 'POST' });
+                const data = await res.json();
+                showMessage(data.message, data.success ? 'success' : 'error');
+                setTimeout(checkStatus, 500);
+            } catch (err) {
+                showMessage('Failed to stop bot', 'error');
+            }
+        }
+
+        function showMessage(text, type) {
+            const msg = document.getElementById('message');
+            msg.textContent = text;
+            msg.className = `message ${type}`;
+            msg.style.display = 'block';
+            setTimeout(() => { msg.style.display = 'none'; }, 3000);
+        }
+    </script>
+</body>
+
+</html>
