@@ -102,20 +102,6 @@ curl http://localhost:3000/status
 
 3. **Auto-start your Aternos server first** - Minion can't connect to a sleeping server (yet)
 
-## FAQ
-
-**Q: Will I get banned?**  
-A: It's your own server. Ban yourself if you want.
-
-**Q: My minion keeps dying!**  
-A: Spawn it somewhere safe, or embrace the chaos. The death counter is a feature, not a bug.
-
-**Q: Can it mine diamonds for me?**  
-A: Not yet, but contributions are welcome 😉
-
-**Q: Why "Minion"?**  
-A: Because "Unpaid-Digital-Labor-That-Keeps-My-Broke-Server-Alive" was too long.
-
 ## Tech Stack
 
 - [Mineflayer](https://github.com/PrismarineJS/mineflayer) - The real MVP
@@ -124,7 +110,7 @@ A: Because "Unpaid-Digital-Labor-That-Keeps-My-Broke-Server-Alive" was too long.
 
 ## Contributing
 
-Found a bug? Want to add features? PRs welcome! Just don't ask me to add premium account support - we're too broke for that.
+Found a bug? Want to add features? PRs welcome! Just don't ask me to add premium account support
 
 ## License
 
@@ -132,6 +118,6 @@ MIT - Do whatever you want, just don't blame me when your minion falls in lava.
 
 ---
 
-*Made with 💔 by someone who was tired of their Aternos server going to sleep.*
+*Made with 💔*
 
-*Now go touch grass... or let your minion do it for you.*
+*Now go touch grass...*
