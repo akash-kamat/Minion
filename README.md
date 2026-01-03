@@ -1,22 +1,18 @@
-# 👾 Minion
+# Minion
 
 > *Your loyal Minecraft companion that never sleeps, never eats (well, it does in-game), and never complains about your 3 AM gaming sessions.*
 
-## The Problem 😭
-
 You know the pain. You're a **broke Minecraft player** using Aternos because paying for a server is basically a crime when you're saving up for that Steam sale. But Aternos has rules:
 
-- 🕐 **Server goes to sleep after 5 minutes of inactivity** - *"Sorry, we noticed nobody is suffering on your server, so we shut it down."*
-- 🌾 **Your beautiful farms stop working** - Those iron golems? Sleeping. The crop farm? Frozen in time. That mob grinder you spent 6 hours building? Absolutely useless.
-- 👻 **You log off for dinner and come back to a dead server** - Now you gotta wait 2 minutes for it to start again like some kind of peasant.
-
-## The Solution 🎉
+- 🕐 **Server goes to sleep after 5 minutes of inactivity**
+- 🌾 **Your beautiful farms stop working** 
+- 👻 **You log off for dinner and come back to a dead server**
 
 **Minion** - A tireless digital soul that:
 
 - ✅ **Keeps your Aternos server alive** - Just by existing
 - ✅ **Keeps your farms running** - Chunks stay loaded, hoppers keep hopping
-- ✅ **Never asks for food** - Okay it might die a few times, but it respawns
+- ✅ **Never asks for food**
 - ✅ **Works for free** - Unlike those fancy Mojang accounts
 
 ## Features
